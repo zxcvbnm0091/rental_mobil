@@ -8,18 +8,22 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index ()
+    public function index()
     {
-        $cars = Car::latest()->get();
-        return view('frontend.homepage', compact('cars'));
+        $vehicles = Car::all();
+
+        $cars = $vehicles->where('jenis_kendaraan', 'mobil');
+        $motorcycles = $vehicles->where('jenis_kendaraan', 'motor');
+        return view('frontend.homepage', compact('cars', 'motorcycles'));
     }
 
-    public function contact ()
+    public function contact()
     {
         return view('frontend.contact');
     }
 
-    public function contactStore(Request $request){
+    public function contactStore(Request $request)
+    {
         $data = $request->validate([
             'nama' => 'required',
             'email' => 'required',
@@ -27,13 +31,12 @@ class HomeController extends Controller
             'pesan' => 'required',
         ]);
 
-        Message :: create($data);
+        Message::create($data);
 
         return redirect()->back()->with([
             'message' => 'Pesan anda berhasil dikirim',
             'alert-type' => 'success'
         ]);
-        
     }
 
     public function detail(Car $car)

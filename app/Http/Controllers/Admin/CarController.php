@@ -19,7 +19,7 @@ class CarController extends Controller
     public function index()
     {
         $cars = Car::latest()->get();
-        return view('admin.cars.index',compact('cars'));
+        return view('admin.cars.index', compact('cars'));
     }
 
     /**
@@ -40,14 +40,14 @@ class CarController extends Controller
      */
     public function store(CarStoreRequest $request)
     {
-        if($request->validated()){
+        if ($request->validated()) {
             $gambar = $request->file('gambar')->store('assets/car', 'public');
             $slug = Str::slug($request->nama_mobil, '-');
             Car::create($request->except('gambar') + ['gambar' => $gambar, 'slug' => $slug]);
         }
 
         return redirect()->route('admin.cars.index')->with([
-            'message' => 'data sukses dibuat', 
+            'message' => 'data sukses dibuat',
             'alert-type' => 'success'
         ]);
     }
@@ -83,7 +83,7 @@ class CarController extends Controller
      */
     public function update(CarUpdateRequest $request, Car $car)
     {
-        if($request->validated()){
+        if ($request->validated()) {
             $slug = Str::slug($request->nama_mobil, '-');
             $car->update($request->validated() + ['slug' => $slug]);
         }
@@ -102,25 +102,25 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        if($car->gambar){
-            unlink('storage/'.$car->gambar);
+        if ($car->gambar) {
+            unlink('storage/' . $car->gambar);
         }
         $car->delete();
 
         return redirect()->back()->with([
             'message' => 'data berhasil dihapus',
-            'alert-type'=>'danger'
+            'alert-type' => 'danger'
         ]);
     }
 
-    public function updateImage(Request $request,$carId)
+    public function updateImage(Request $request, $carId)
     {
         $request->validate([
             'gambar' => 'required|image'
         ]);
         $car = Car::findOrFail($carId);
-        if($request->gambar){
-            unlink('storage/'. $car->gambar);
+        if ($request->gambar) {
+            unlink('storage/' . $car->gambar);
             $gambar = $request->file('gambar')->store('assets/car', 'public');
             $car->update(['gambar' => $gambar]);
         }

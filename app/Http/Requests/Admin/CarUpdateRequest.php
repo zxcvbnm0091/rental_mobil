@@ -25,6 +25,7 @@ class CarUpdateRequest extends FormRequest
     {
         return [
             'nama_mobil' => 'required',
+            'jenis_kendaraan' => 'required',
             'harga_sewa' => 'required',
             'bahan_bakar' => 'required',
             'jumlah_kursi' => 'required',
